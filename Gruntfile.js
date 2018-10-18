@@ -1,112 +1,51 @@
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks
-
     // Configuration
+    const files = [{
+        src: 'src/main.js',
+        dest: 'dist/main.js'
+    }, {
+        src: 'src/iframe.js',
+        dest: 'dist/iframe.js'
+    }, {
+        src: 'src/layout.js',
+        dest: 'dist/layout.js'
+    }];
     grunt.initConfig({
         browserify: {
-            development: {
-                src: [
-                    "src/*.js"
-                ],
-                dest: 'dist/common.js',
+            dev: {
+                files,
                 options: {
                     browserifyOptions: { debug: true },
                     transform: [["babelify", { "presets": ["es2015"] }]],
-                    plugin: [
-                        ["factor-bundle", {
-                            outputs: [
-                                'dist/builder.js',
-                                'dist/components-bootstrap4.js',
-                                'dist/inputs.js',
-                                'dist/undo.js'
-                            ]
-                        }]
-                    ],
+                    plugin: [],
                     watch: true,
                     keepAlive: true,
                 }
             },
-            production: {
-                src: [
-                    "src/*.js"
-                ],
-                dest: 'dist/common.min.js',
+            prod: {
+                files,
                 options: {
                     browserifyOptions: { debug: false },
                     transform: [["babelify", { "presets": ["es2015"] }]],
                     plugin: [
-                        ["factor-bundle", {
-                            outputs: [
-                                'transpiled/builder.min.js',
-                                'transpiled/components-bootstrap4.min.js',
-                                'transpiled/inputs.min.js',
-                                'transpiled/undo.min.js'
-                            ]
-                        }],
                         ["minifyify", { map: false }]
-                    ]
+                    ],
+                    keepAlive: true,
                 }
-            }
-        },
-        babel: {
-            options: {
-                sourceMap: true,
-                presets: ['env']
             },
-            transpile: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'src/',
-                        src: ['*.js'],
-                        dest: 'transpiled/',
-                        ext: '.babel.js'
-                    }
-                ]
-            },
-            build: {
-                files: {
-                    'dist/built.js': 'concated/concated.js',
-                    'dist/drag-n-drop.js': 'src/drag-n-drop.js'
-                }
-            }
-        },
-        concat: {
-            es6: {
-                src: [
-                    'transpiled/builder*.js',
-                    'transpiled/undo*.js',
-                    'transpiled/inputs*.js',
-                    'transpiled/components-bootstrap4*.js'
-                ],
-                dest: 'dist/built.js'
-            },
-            es5: {
-                src: [
-                    'src/builder*.js',
-                    'src/undo*.js',
-                    'src/inputs*.js',
-                    'src/components-bootstrap4*.js'
-                ],
-                dest: 'concated/concated.js'
-            }
         },
         clean: {
-            concated: ['concated'],
-            built: ['dist'],
-            transpiled: ['transpiled']
+            built: ['dist']
         }
     });
 
     // Load plugins
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-browserify');
 
     // Register tasks
-    grunt.registerTask("build:dev", ['browserify:development']);
-    grunt.registerTask("build:prod", ['browserify:production']);
-    grunt.registerTask('build', ['clean:all', 'concat:es5', 'babel:build']);
-    grunt.registerTask('transpile', ['babel:transpile']);
-    grunt.registerTask('clean:all', ['clean:concated', 'clean:built', 'clean:transpiled']);
+    grunt.registerTask("build:dev", ['clean:all', 'browserify:dev']);
+    grunt.registerTask("build:prod", ['clean:all', 'browserify:prod']);
+    grunt.registerTask('clean:all', ['clean:built']);
 };

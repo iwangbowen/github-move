@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./libs/ag-grid/ag-grid.css">
+    <link rel="stylesheet" href="./libs/ag-grid/ag-theme-balham.css">
+    <link rel="stylesheet" href="../libs/select2/select2.min.css">
+</head>
+
+<body>
+    <div></div>
+    <form method="POST" action="">
+        First name:
+        <br>
+        <input type="text" name="firstname" value="Mickey">
+        <br> Last name:
+        <br>
+        <input type="text" name="lastname" value="Mouse">
+        <br>
+        <input type="checkbox" name="vehicle" value="Bike">I have a bike
+        <br>
+        <input type="checkbox" name="vehicle" value="Car">I have a car
+        <br>
+        <input type="checkbox" name="vehicle" value="Train">I have a train
+        <br>
+        <input type="radio" name="sex" checked>Male
+        <br>
+        <input type="radio" name="sex">Female
+        <br>
+        <select name="firstname" multiple>
+            <option value="volvo" selected>Volvo</option>
+            <option value="saab" selected>Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+    <!-- <div id="no" style="width: 50px; height: 50px; background: rebeccapurple;"></div>
+    <div id="outer" style="left: 20px; top: 10px;position: absolute; width: 50px; height: 50px; background: rebeccapurple;">
+        <div id="inner" style="position: absolute; left: 5px; top: 5px; width: 20px; height: 20px; background: powderblue;"></div>
+    </div>
+    <div id="yes" onclick='"helo"' style="left: 20px; height: 50px; background: orange;"></div>
+    <div id="myGrid" style="height: 600px;width:500px;" class="ag-theme-balham"></div> -->
+    <script id="script1" src="../js/jquery.min.js"></script>
+    <script src="../js/jquery.hotkeys.js"></script>
+    <script src="./libs/ag-grid/ag-grid.min.noStyle.js"></script>
+    <script src="../libs/select2/select2.min.js"></script>
+    <script>
+        $(document).bind('keydown', 'alt+d', console.log);
+        $('select').select2();
+        $(document).on('keydown', function (e) {
+            var kc = e.which || e.keyCode;
+
+            if (e.ctrlKey && String.fromCharCode(kc).toUpperCase() == "D") {
+                e.preventDefault();
+                console.log(String.fromCharCode(kc).toUpperCase());
+                // window.location.href = 'your url here';
+            }
+        });
+
+        $.ajax({
+            method: 'POST',
+            url: 'api',
+            data: {
+                countries: 'China',
+                companies: 'Apple'
+            }
+        });
+        console.log($('script2').prop('baseURI'));
+        // specify the columns
+        var columnDefs = [
+            { headerName: "Make", field: "make" },
+            { headerName: "Model", field: "model" },
+            { headerName: "Price", field: "price" }
+        ];
+
+        // let the grid know which columns and what data to use
+        var gridOptions = {
+            columnDefs: columnDefs,
+            enableSorting: true,
+            enableFilter: true
+        };
+
+
+        // lookup the container we want the Grid to use
+        var eGridDiv = document.querySelector('#myGrid');
+
+        // create the grid passing in the div to use together with the columns & data we want to use
+        var ins = new agGrid.Grid(eGridDiv, gridOptions);
+        console.log(ins);
+        console.log(gridOptions);
+        fetch('https://api.myjson.com/bins/15psn9').then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            // gridOptions.api.setRowData([]);
+        })
+    </script>
+</body>
+
+</html>

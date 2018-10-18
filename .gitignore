@@ -1,3 +1,10 @@
 node_modules/
 concated/
 transpiled/
+.vscode/
+.idea/
+dist/
+.settings/
+.project
+template/oee/html/demo/index*.html
+.svn/
